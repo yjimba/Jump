@@ -3,114 +3,1483 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>麻雀 点数計算</title>
+
+<title>雀符（Jump）｜麻雀符計算</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f4f6f8;color:#17202a;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif}
-.wrap{max-width:560px;margin:auto;padding:16px 14px 40px}h1{font-size:24px;margin:6px 0 16px}.card{background:#fff;border-radius:18px;padding:18px;margin:12px 0;box-shadow:0 3px 14px #0001}.q{font-weight:750;font-size:17px;margin-bottom:12px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.btn{border:1px solid #ccd3da;background:#fff;border-radius:12px;padding:13px 8px;font-size:16px;font-weight:650}.btn.sel{background:#17202a;color:#fff;border-color:#17202a}
-label{font-size:14px;font-weight:700;display:block;margin:12px 0 6px}select{width:100%;padding:12px;border:1px solid #ccd3da;border-radius:10px;background:#fff;font-size:16px}
-.row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}.muted{font-size:13px;color:#68737e}.primary,.secondary{width:100%;border-radius:13px;padding:15px;font-size:17px;font-weight:750}.primary{background:#17202a;color:#fff;border:0}.secondary{background:#fff;border:1px solid #ccd3da;margin-top:9px}
-.hidden{display:none}.big{font-size:32px;font-weight:850;margin:5px 0}.result{font-weight:750;font-size:19px}table{width:100%;border-collapse:collapse}td{padding:8px 2px;border-bottom:1px solid #edf0f2}td:last-child{text-align:right;font-weight:750}
-.countgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.count{display:flex;flex-direction:column;gap:4px}.count span{text-align:center;font-size:13px;font-weight:650}.count select{padding:9px 3px}
-.note{background:#f1f3f5;padding:10px;border-radius:11px;font-size:13px}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f5f5f5;
+  color: #222;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Noto Sans JP",
+    sans-serif;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.logo {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.subtitle {
+  margin-top: 4px;
+  color: #666;
+  font-size: 14px;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+
+.question {
+  margin-bottom: 22px;
+}
+
+.question:last-child {
+  margin-bottom: 0;
+}
+
+.question-title {
+  font-weight: 700;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.option {
+  position: relative;
+}
+
+.option input {
+  position: absolute;
+  opacity: 0;
+}
+
+.option label {
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 11px 8px;
+  text-align: center;
+  cursor: pointer;
+  background: #fff;
+  transition: 0.15s;
+}
+
+.option input:checked + label {
+  background: #222;
+  color: white;
+  border-color: #222;
+}
+
+.number-row {
+  display: grid;
+  grid-template-columns: 1fr 100px;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.number-row:last-child {
+  margin-bottom: 0;
+}
+
+.number-row span {
+  font-size: 14px;
+}
+
+.number-row select {
+  width: 100%;
+  padding: 9px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: white;
+  font-size: 16px;
+}
+
+button {
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  padding: 15px;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  background: #222;
+  color: white;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+#result {
+  display: none;
+}
+
+.result-main {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.result-title {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.fu {
+  font-size: 38px;
+  font-weight: 800;
+}
+
+.points {
+  font-size: 28px;
+  font-weight: 800;
+  margin-top: 4px;
+}
+
+.detail {
+  background: #f7f7f7;
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 14px;
+  line-height: 1.8;
+  font-size: 14px;
+}
+
+.score-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.score-table th,
+.score-table td {
+  border: 1px solid #ddd;
+  padding: 9px 6px;
+  text-align: center;
+}
+
+.score-table th {
+  background: #f3f3f3;
+}
+
+.highlight {
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.note {
+  color: #777;
+  font-size: 12px;
+  margin-top: 10px;
+  line-height: 1.6;
+}
+
+.reset {
+  margin-top: 12px;
+  background: white;
+  color: #222;
+  border: 1px solid #ccc;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 18px 12px 40px;
+  }
+
+  .logo {
+    font-size: 32px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .options {
+    grid-template-columns: 1fr;
+  }
+}
 </style>
 </head>
+
 <body>
-<div class="wrap">
-<h1>🀄 麻雀 点数計算</h1>
-<div id="app"></div>
+
+<div class="container">
+
+<header>
+  <div class="logo">雀符（Jump）</div>
+  <div class="subtitle">麻雀の符計算・点数計算</div>
+</header>
+
+
+<!-- =========================
+     質問
+========================= -->
+
+<div class="card">
+
+  <!-- 1. 形 -->
+  <div class="question">
+
+    <div class="question-title">
+      1. 形について
+    </div>
+
+    <div class="options">
+
+      <div class="option">
+        <input type="radio"
+               name="shape"
+               id="shape1"
+               value="chiitoi">
+        <label for="shape1">七対子</label>
+      </div>
+
+      <div class="option">
+        <input type="radio"
+               name="shape"
+               id="shape2"
+               value="pinfuTsumo">
+        <label for="shape2">平和ツモ</label>
+      </div>
+
+      <div class="option">
+        <input type="radio"
+               name="shape"
+               id="shape3"
+               value="openPinfuRon">
+        <label for="shape3">副露平和形ロン</label>
+      </div>
+
+      <div class="option">
+        <input type="radio"
+               name="shape"
+               id="shape4"
+               value="other"
+               checked>
+        <label for="shape4">それ以外</label>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- 2. 翻数 -->
+  <div class="question">
+
+    <div class="question-title">
+      2. 何翻ですか？
+    </div>
+
+    <div class="options">
+
+      <div class="option">
+        <input type="radio"
+               name="han"
+               id="han1"
+               value="1">
+        <label for="han1">1翻</label>
+      </div>
+
+      <div class="option">
+        <input type="radio"
+               name="han"
+               id="han2"
+               value="2">
+        <label for="han2">2翻</label>
+      </div>
+
+      <div class="option">
+        <input type="radio"
+               name="han"
+               id="han3"
+               value="3">
+        <label for="han3">3翻</label>
+      </div>
+
+      <div class="option">
+        <input type="radio"
+               name="han"
+               id="han4"
+               value="4">
+        <label for="han4">4翻</label>
+      </div>
+
+      <div class="option">
+        <input type="radio"
+               name="han"
+               id="han5"
+               value="5plus">
+        <label for="han5">5翻以上</label>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- 3. ロン・ツモ -->
+  <div class="question"
+       id="winTypeQuestion">
+
+    <div class="question-title">
+      3. ロン・ツモ
+    </div>
+
+    <div class="options">
+
+      <div class="option">
+        <input type="radio"
+               name="winType"
+               id="ron"
+               value="ron"
+               checked>
+        <label for="ron">ロン</label>
+      </div>
+
+      <div class="option">
+        <input type="radio"
+               name="winType"
+               id="tsumo"
+               value="tsumo">
+        <label for="tsumo">ツモ</label>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- 4. 面前・副露 -->
+  <div class="question"
+       id="openQuestion">
+
+    <div class="question-title">
+      4. 面前・副露あり
+    </div>
+
+    <div class="options">
+
+      <div class="option">
+        <input type="radio"
+               name="open"
+               id="closed"
+               value="closed"
+               checked>
+        <label for="closed">面前</label>
+      </div>
+
+      <div class="option">
+        <input type="radio"
+               name="open"
+               id="open"
+               value="open">
+        <label for="open">副露あり</label>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- 5. 待ち -->
+  <div class="question"
+       id="waitQuestion">
+
+    <div class="question-title">
+      5. 待ち
+    </div>
+
+    <div class="options">
+
+      <div class="option">
+        <input type="radio"
+               name="wait"
+               id="wait1"
+               value="ryanmenShabo"
+               checked>
+        <label for="wait1">両面・シャボ</label>
+      </div>
+
+      <div class="option">
+        <input type="radio"
+               name="wait"
+               id="wait2"
+               value="kanchanPenchanTanki">
+        <label for="wait2">嵌張・辺張・単騎</label>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- 6. 雀頭 -->
+  <div class="question"
+       id="headQuestion">
+
+    <div class="question-title">
+      6. 雀頭
+    </div>
+
+    <div class="options">
+
+      <div class="option">
+        <input type="radio"
+               name="head"
+               id="headYakuhai"
+               value="yakuhai"
+               checked>
+        <label for="headYakuhai">役牌</label>
+      </div>
+
+      <div class="option">
+        <input type="radio"
+               name="head"
+               id="headNormal"
+               value="normal">
+        <label for="headNormal">普通</label>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- 7. 中張牌 -->
+  <div class="question"
+       id="middleQuestion">
+
+    <div class="question-title">
+      7. 中張牌の面子
+    </div>
+
+    <div class="number-row">
+      <span>暗刻の数</span>
+
+      <select id="middleAnko">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+    </div>
+
+    <div class="number-row">
+      <span>明刻の数</span>
+
+      <select id="middleMinko">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+    </div>
+
+    <div class="number-row">
+      <span>暗槓の数</span>
+
+      <select id="middleAnkan">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+    </div>
+
+    <div class="number-row">
+      <span>明槓の数</span>
+
+      <select id="middleMinkan">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+    </div>
+
+  </div>
+
+
+  <!-- 8. 么九牌 -->
+  <div class="question"
+       id="terminalQuestion">
+
+    <div class="question-title">
+      8. 么九牌の面子
+    </div>
+
+    <div class="number-row">
+      <span>暗刻の数</span>
+
+      <select id="terminalAnko">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+    </div>
+
+    <div class="number-row">
+      <span>明刻の数</span>
+
+      <select id="terminalMinko">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+    </div>
+
+    <div class="number-row">
+      <span>暗槓の数</span>
+
+      <select id="terminalAnkan">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+    </div>
+
+    <div class="number-row">
+      <span>明槓の数</span>
+
+      <select id="terminalMinkan">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+    </div>
+
+  </div>
+
+
+  <button onclick="calculate()">
+    符と点数を計算
+  </button>
+
 </div>
+
+
+<!-- =========================
+     結果
+========================= -->
+
+<div class="card"
+     id="result">
+
+  <div class="result-main">
+
+    <div class="result-title"
+         id="resultType">
+    </div>
+
+    <div class="fu"
+         id="fuResult">
+    </div>
+
+    <div class="points"
+         id="pointResult">
+    </div>
+
+  </div>
+
+  <div class="detail"
+       id="detailResult">
+  </div>
+
+  <button class="reset"
+          onclick="resetApp()">
+    もう一度計算する
+  </button>
+
+</div>
+
+</div>
+
+
 <script>
-const S={special:null,under4:null,method:null,closed:null,wait:null,head:null};
-const app=document.getElementById("app");
-function buttons(title,key,items){
- return `<div class="card"><div class="q">${title}</div><div class="grid">${items.map(([v,t])=>`<button class="btn ${S[key]===v?'sel':''}" onclick="setv('${key}','${v}')">${t}</button>`).join("")}</div></div>`;
-}
-function setv(k,v){S[k]=v;render()}
-function render(){
- let h="";
- if(S.special===null){
-  h=buttons("1. どの形ですか？","special",[["chiitoi","七対子"],["pinfu_tsumo","ピンフツモ"],["pinfu_ron","ピンフロン"],["normal","それ以外"]]);
- } else {
-  h+=buttons("1. どの形ですか？","special",[["chiitoi","七対子"],["pinfu_tsumo","ピンフツモ"],["pinfu_ron","ピンフロン"],["normal","それ以外"]]);
-  h+=buttons("2. 4翻以下？","under4",[["yes","はい"],["no","いいえ"]]);
-  h+=buttons("3. あがり方","method",[["ron","ロン"],["tsumo","ツモ"]]);
-  h+=buttons("4. 面前・副露","closed",[["closed","面前"],["open","副露あり"]]);
 
-  if(S.special!=="chiitoi" && S.special!=="pinfu_tsumo" && S.special!=="pinfu_ron" && S.under4==="yes"){
-   h+=buttons("5. 待ち","wait",[["ryanmen_shabo","両面＆シャボ"],["kanchan_penchan_tanki","嵌張＆辺張＆単騎"]]);
-   h+=buttons("6. 雀頭","head",[["normal","普通"],["yakuhai","役牌"]]);
-   h+=mentsuCard();
+/* =====================================
+   共通関数
+===================================== */
+
+function getRadio(name) {
+
+  const checked =
+    document.querySelector(
+      'input[name="' + name + '"]:checked'
+    );
+
+  return checked ? checked.value : null;
+}
+
+
+function num(id) {
+
+  return Number(
+    document.getElementById(id).value
+  );
+
+}
+
+
+/* =====================================
+   符計算
+===================================== */
+
+function calculateFu() {
+
+  const shape = getRadio("shape");
+  const winType = getRadio("winType");
+  const open = getRadio("open");
+  const wait = getRadio("wait");
+  const head = getRadio("head");
+
+
+  /* 七対子 */
+
+  if (shape === "chiitoi") {
+
+    return {
+      fu: 25,
+      details: [
+        "七対子：25符固定"
+      ]
+    };
+
   }
-  h+=`<div class="card"><div class="q">7. 翻数</div>
-  <select id="han">
-   ${[1,2,3,4].map(x=>`<option value="${x}">${x}翻</option>`).join("")}
-   <option value="5">5翻（満貫）</option><option value="6">6翻（跳満）</option><option value="7">7翻（跳満）</option>
-   <option value="8">8翻（倍満）</option><option value="9">9翻（倍満）</option><option value="10">10翻（倍満）</option>
-   <option value="11">11翻（三倍満）</option><option value="12">12翻（三倍満）</option><option value="13">13翻以上（役満）</option>
-  </select>
-  <button class="primary" onclick="calc()">点数を計算</button></div>`;
- }
- app.innerHTML=h;
-}
-function mentsuCard(){
- const types=["暗刻","明刻","暗槓","明槓"];
- function sel(id){return `<select id="${id}">${[0,1,2,3,4].map(n=>`<option>${n}</option>`).join("")}</select>`}
- return `<div class="card"><div class="q">7. 面子の数</div>
- <div class="note">順子は0符なので入力不要です。各種類の個数だけ入力してください。</div>
- <label>中張牌</label><div class="countgrid">
- <div class="count"><span>${types[0]}</span>${sel("c_an_ko")}</div><div class="count"><span>${types[1]}</span>${sel("c_mei_ko")}</div>
- <div class="count"><span>${types[2]}</span>${sel("c_an_kan")}</div><div class="count"><span>${types[3]}</span>${sel("c_mei_kan")}</div></div>
- <label>么九牌</label><div class="countgrid">
- <div class="count"><span>${types[0]}</span>${sel("t_an_ko")}</div><div class="count"><span>${types[1]}</span>${sel("t_mei_ko")}</div>
- <div class="count"><span>${types[2]}</span>${sel("t_an_kan")}</div><div class="count"><span>${types[3]}</span>${sel("t_mei_kan")}</div></div>
- </div>`;
-}
-function n(id){return +(document.getElementById(id)?.value||0)}
-function calc(){
- const dealer=window.confirm("親ですか？\\n「OK」= 親、「キャンセル」= 子");
- const han=+document.getElementById("han").value;
- let fu=null,lines=[];
- if(S.special==="chiitoi"){fu=25;lines=[["七対子",25]]}
- else if(S.special==="pinfu_tsumo"){fu=20;lines=[["平和ツモ",20]]}
- else if(S.special==="pinfu_ron"){fu=30;lines=[["平和ロン（門前ロン込み）",30]]}
- else if(S.under4==="yes"){
-  fu=20;lines=[["副底",20]];
-  if(S.method==="ron"&&S.closed==="closed"){fu+=10;lines.push(["門前ロン",10])}
-  if(S.wait==="kanchan_penchan_tanki"){fu+=2;lines.push(["嵌張・辺張・単騎",2])}
-  if(S.head==="yakuhai"){fu+=2;lines.push(["役牌雀頭",2])}
-  const items=[
-   ["c_an_ko","中張牌暗刻",4],["c_mei_ko","中張牌明刻",2],["c_an_kan","中張牌暗槓",16],["c_mei_kan","中張牌明槓",8],
-   ["t_an_ko","么九牌暗刻",8],["t_mei_ko","么九牌明刻",4],["t_an_kan","么九牌暗槓",32],["t_mei_kan","么九牌明槓",16]
+
+
+  /* 平和ツモ */
+
+  if (shape === "pinfuTsumo") {
+
+    return {
+      fu: 20,
+      details: [
+        "平和ツモ：20符固定"
+      ]
+    };
+
+  }
+
+
+  /* 副露平和形ロン */
+
+  if (shape === "openPinfuRon") {
+
+    return {
+      fu: 30,
+      details: [
+        "副露平和形ロン：30符"
+      ]
+    };
+
+  }
+
+
+  /* 通常形 */
+
+  let fu = 20;
+
+  let details = [
+    "基本符：20符"
   ];
-  items.forEach(([id,name,val])=>{let c=n(id);if(c){fu+=c*val;lines.push([name+` × ${c}`,c*val])}});
-  const raw=fu;fu=Math.ceil(fu/10)*10;
-  if(fu!==raw)lines.push(["10符単位に切り上げ",fu-raw]);
- } else { fu=undefined; }
 
- const payment=score(han,fu,dealer,S.method);
- const title=payment.limit;
- let detail="";
- if(payment.kind==="ron") detail=`${payment.points.toLocaleString()}点`;
- else if(payment.kind==="tsumoDealer") detail=`${payment.points.toLocaleString()}点オール`;
- else detail=`${payment.child.toLocaleString()} / ${payment.dealer.toLocaleString()}点`;
 
- let breakdown=fu?`<div class="card"><div class="q">符の内訳</div><table>${lines.map(x=>`<tr><td>${x[0]}</td><td>${x[1]>=0?"+":""}${x[1]}符</td></tr>`).join("")}</table><p class="muted">合計 ${fu}符</p></div>`:"";
- app.innerHTML=`<div class="card result"><div class="muted">${dealer?"親":"子"}・${S.method==="ron"?"ロン":"ツモ"}</div><div class="big">${title}</div><div>${detail}</div></div>
- ${breakdown}<div class="card"><div class="q">入力内容</div><p>${S.special==="normal"?"通常形":S.special==="chiitoi"?"七対子":S.special==="pinfu_tsumo"?"ピンフツモ":"ピンフロン"}・${han}翻・${S.closed==="closed"?"面前":"副露あり"}</p>
- <button class="secondary" onclick="render()">最初からやり直す</button></div>`;
+  /* 門前ロン */
+
+  if (
+    winType === "ron" &&
+    open === "closed"
+  ) {
+
+    fu += 10;
+
+    details.push(
+      "門前ロン：+10符"
+    );
+
+  }
+
+
+  /* ツモ */
+
+  if (winType === "tsumo") {
+
+    fu += 2;
+
+    details.push(
+      "ツモ：+2符"
+    );
+
+  }
+
+
+  /* 雀頭 */
+
+  if (head === "yakuhai") {
+
+    fu += 2;
+
+    details.push(
+      "役牌雀頭：+2符"
+    );
+
+  }
+
+
+  /* 待ち */
+
+  if (
+    wait ===
+    "kanchanPenchanTanki"
+  ) {
+
+    fu += 2;
+
+    details.push(
+      "嵌張・辺張・単騎待ち：+2符"
+    );
+
+  }
+
+
+  /* 中張牌 */
+
+  const middleAnko =
+    num("middleAnko");
+
+  const middleMinko =
+    num("middleMinko");
+
+  const middleAnkan =
+    num("middleAnkan");
+
+  const middleMinkan =
+    num("middleMinkan");
+
+
+  fu += middleAnko * 4;
+  fu += middleMinko * 2;
+  fu += middleAnkan * 16;
+  fu += middleMinkan * 8;
+
+
+  if (middleAnko > 0) {
+
+    details.push(
+      "中張牌暗刻：" +
+      middleAnko +
+      "個 × 4符"
+    );
+
+  }
+
+  if (middleMinko > 0) {
+
+    details.push(
+      "中張牌明刻：" +
+      middleMinko +
+      "個 × 2符"
+    );
+
+  }
+
+  if (middleAnkan > 0) {
+
+    details.push(
+      "中張牌暗槓：" +
+      middleAnkan +
+      "個 × 16符"
+    );
+
+  }
+
+  if (middleMinkan > 0) {
+
+    details.push(
+      "中張牌明槓：" +
+      middleMinkan +
+      "個 × 8符"
+    );
+
+  }
+
+
+  /* 么九牌 */
+
+  const terminalAnko =
+    num("terminalAnko");
+
+  const terminalMinko =
+    num("terminalMinko");
+
+  const terminalAnkan =
+    num("terminalAnkan");
+
+  const terminalMinkan =
+    num("terminalMinkan");
+
+
+  fu += terminalAnko * 8;
+  fu += terminalMinko * 4;
+  fu += terminalAnkan * 32;
+  fu += terminalMinkan * 16;
+
+
+  if (terminalAnko > 0) {
+
+    details.push(
+      "么九牌暗刻：" +
+      terminalAnko +
+      "個 × 8符"
+    );
+
+  }
+
+  if (terminalMinko > 0) {
+
+    details.push(
+      "么九牌明刻：" +
+      terminalMinko +
+      "個 × 4符"
+    );
+
+  }
+
+  if (terminalAnkan > 0) {
+
+    details.push(
+      "么九牌暗槓：" +
+      terminalAnkan +
+      "個 × 32符"
+    );
+
+  }
+
+  if (terminalMinkan > 0) {
+
+    details.push(
+      "么九牌明槓：" +
+      terminalMinkan +
+      "個 × 16符"
+    );
+
+  }
+
+
+  /* 10符単位に切り上げ */
+
+  fu =
+    Math.ceil(fu / 10) * 10;
+
+
+  details.push(
+    "最終符：" + fu + "符"
+  );
+
+
+  return {
+    fu: fu,
+    details: details
+  };
+
 }
-function score(han,fu,dealer,method){
- if(han>=13)return {limit:"役満",kind:method==="ron"?"ron":"tsumoDealer",points:dealer?48000:32000};
- if(han>=11)return {limit:"三倍満",kind:method==="ron"?"ron":"tsumoDealer",points:dealer?36000:24000};
- if(han>=8)return {limit:"倍満",kind:method==="ron"?"ron":"tsumoDealer",points:dealer?24000:16000};
- if(han>=6)return {limit:"跳満",kind:method==="ron"?"ron":"tsumoDealer",points:dealer?18000:12000};
- if(han>=5 || (han===4&&fu>=40) || (han===3&&fu>=70))return {limit:"満貫",kind:method==="ron"?"ron":"tsumoDealer",points:dealer?12000:8000};
- const base=fu*Math.pow(2,han+2);
- if(method==="ron")return {limit:`${han}翻 ${fu}符`,kind:"ron",points:Math.ceil((base*(dealer?6:4))/100)*100};
- if(dealer)return {limit:`${han}翻 ${fu}符`,kind:"tsumoDealer",points:Math.ceil(base*2/100)*100};
- return {limit:`${han}翻 ${fu}符`,kind:"tsumoChild",child:Math.ceil(base/100)*100,dealer:Math.ceil(base*2/100)*100};
+
+
+/* =====================================
+   点数計算
+===================================== */
+
+function calculatePoints(
+  fu,
+  han,
+  winType
+) {
+
+  /*
+    基本点
+    fu × 2^(han+2)
+  */
+
+  const base =
+    fu * Math.pow(2, han + 2);
+
+
+  /*
+    満貫判定
+
+    基本点2000以上なら満貫
+  */
+
+  if (base >= 2000) {
+
+    return {
+      limit: "満貫",
+      dealerRon: 12000,
+      childRon: 8000,
+      dealerTsumo: "4000オール",
+      childTsumo: "2000 / 4000"
+    };
+
+  }
+
+
+  /* ロン */
+
+  const childRon =
+    Math.ceil(
+      base * 4 / 100
+    ) * 100;
+
+
+  const dealerRon =
+    Math.ceil(
+      base * 6 / 100
+    ) * 100;
+
+
+  /* ツモ */
+
+  const childTsumoKo =
+    Math.ceil(
+      base / 100
+    ) * 100;
+
+
+  const childTsumoOya =
+    Math.ceil(
+      base * 2 / 100
+    ) * 100;
+
+
+  const dealerTsumo =
+    Math.ceil(
+      base * 2 / 100
+    ) * 100;
+
+
+  return {
+
+    limit: null,
+
+    dealerRon:
+      dealerRon,
+
+    childRon:
+      childRon,
+
+    dealerTsumo:
+      dealerTsumo,
+
+    childTsumo:
+      childTsumoKo +
+      " / " +
+      childTsumoOya
+
+  };
+
 }
-render();
+
+
+/* =====================================
+   満貫以上の点数表
+===================================== */
+
+function makeLimitTable() {
+
+  return `
+
+    <div class="highlight">
+      満貫以上の点数表
+    </div>
+
+    <table class="score-table">
+
+      <thead>
+
+        <tr>
+          <th>翻数</th>
+          <th>親・ロン</th>
+          <th>子・ロン</th>
+          <th>親・ツモ</th>
+          <th>子・ツモ</th>
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr>
+          <td>5翻<br>満貫</td>
+          <td>12,000</td>
+          <td>8,000</td>
+          <td>4,000オール</td>
+          <td>2,000 / 4,000</td>
+        </tr>
+
+        <tr>
+          <td>6〜7翻<br>跳満</td>
+          <td>18,000</td>
+          <td>12,000</td>
+          <td>6,000オール</td>
+          <td>3,000 / 6,000</td>
+        </tr>
+
+        <tr>
+          <td>8〜10翻<br>倍満</td>
+          <td>24,000</td>
+          <td>16,000</td>
+          <td>8,000オール</td>
+          <td>4,000 / 8,000</td>
+        </tr>
+
+        <tr>
+          <td>11〜12翻<br>三倍満</td>
+          <td>36,000</td>
+          <td>24,000</td>
+          <td>12,000オール</td>
+          <td>6,000 / 12,000</td>
+        </tr>
+
+        <tr>
+          <td>13翻以上<br>役満</td>
+          <td>48,000</td>
+          <td>32,000</td>
+          <td>16,000オール</td>
+          <td>8,000 / 16,000</td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+    <div class="note">
+      5翻＝満貫、6〜7翻＝跳満、8〜10翻＝倍満、
+      11〜12翻＝三倍満、13翻以上＝役満。
+    </div>
+
+  `;
+
+}
+
+
+/* =====================================
+   メイン処理
+===================================== */
+
+function calculate() {
+
+  const result =
+    document.getElementById("result");
+
+  const shape =
+    getRadio("shape");
+
+  const han =
+    getRadio("han");
+
+  const winType =
+    getRadio("winType");
+
+
+  result.style.display = "block";
+
+
+  /* ---------------------------------
+     5翻以上
+  --------------------------------- */
+
+  if (han === "5plus") {
+
+    document.getElementById(
+      "resultType"
+    ).textContent =
+      "5翻以上";
+
+
+    document.getElementById(
+      "fuResult"
+    ).textContent =
+      "満貫以上";
+
+
+    document.getElementById(
+      "pointResult"
+    ).textContent =
+      "";
+
+
+    document.getElementById(
+      "detailResult"
+    ).innerHTML =
+      makeLimitTable();
+
+
+    result.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+    return;
+
+  }
+
+
+  /* ---------------------------------
+     1〜4翻
+  --------------------------------- */
+
+  const hanNumber =
+    Number(han);
+
+
+  const fuData =
+    calculateFu();
+
+
+  const fu =
+    fuData.fu;
+
+
+  const points =
+    calculatePoints(
+      fu,
+      hanNumber,
+      winType
+    );
+
+
+  /* 結果タイトル */
+
+  document.getElementById(
+    "resultType"
+  ).textContent =
+    hanNumber +
+    "翻・" +
+    (winType === "ron"
+      ? "ロン"
+      : "ツモ");
+
+
+  /* 符 */
+
+  document.getElementById(
+    "fuResult"
+  ).textContent =
+    fu + "符";
+
+
+  /* ---------------------------------
+     点数表示
+  --------------------------------- */
+
+  let pointText = "";
+
+
+  if (winType === "ron") {
+
+    pointText =
+      "親 " +
+      points.dealerRon.toLocaleString() +
+      " / 子 " +
+      points.childRon.toLocaleString();
+
+  } else {
+
+    pointText =
+      "親 " +
+      points.dealerTsumo.toLocaleString() +
+      "オール / 子 " +
+      points.childTsumo;
+
+  }
+
+
+  document.getElementById(
+    "pointResult"
+  ).textContent =
+    pointText;
+
+
+  /* ---------------------------------
+     詳細
+  --------------------------------- */
+
+  let detailHTML = "";
+
+
+  detailHTML +=
+    "<strong>符の内訳</strong><br>";
+
+
+  detailHTML +=
+    fuData.details.join("<br>");
+
+
+  /* 満貫になった場合 */
+
+  if (points.limit) {
+
+    detailHTML +=
+      "<br><br><strong>" +
+      points.limit +
+      "</strong>";
+
+  }
+
+
+  document.getElementById(
+    "detailResult"
+  ).innerHTML =
+    detailHTML;
+
+
+  result.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+}
+
+
+/* =====================================
+   リセット
+===================================== */
+
+function resetApp() {
+
+  document.querySelectorAll(
+    'input[type="radio"]'
+  ).forEach(function(input) {
+
+    input.checked = false;
+
+  });
+
+
+  document.getElementById(
+    "shape4"
+  ).checked = true;
+
+
+  document.getElementById(
+    "han1"
+  ).checked = true;
+
+
+  document.getElementById(
+    "ron"
+  ).checked = true;
+
+
+  document.getElementById(
+    "closed"
+  ).checked = true;
+
+
+  document.getElementById(
+    "wait1"
+  ).checked = true;
+
+
+  document.getElementById(
+    "headNormal"
+  ).checked = true;
+
+
+  document.querySelectorAll(
+    "select"
+  ).forEach(function(select) {
+
+    select.value = "0";
+
+  });
+
+
+  document.getElementById(
+    "result"
+  ).style.display =
+    "none";
+
+
+  updateQuestions();
+
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+}
+
+
+/* =====================================
+   質問項目の自動調整
+===================================== */
+
+function updateQuestions() {
+
+  const shape =
+    getRadio("shape");
+
+
+  /*
+    特殊形では通常の符計算を
+    行わない
+  */
+
+  const special =
+    shape === "chiitoi" ||
+    shape === "pinfuTsumo" ||
+    shape === "openPinfuRon";
+
+
+  document.getElementById(
+    "openQuestion"
+  ).classList.toggle(
+    "hidden",
+    special
+  );
+
+
+  document.getElementById(
+    "waitQuestion"
+  ).classList.toggle(
+    "hidden",
+    special
+  );
+
+
+  document.getElementById(
+    "headQuestion"
+  ).classList.toggle(
+    "hidden",
+    special
+  );
+
+
+  document.getElementById(
+    "middleQuestion"
+  ).classList.toggle(
+    "hidden",
+    special
+  );
+
+
+  document.getElementById(
+    "terminalQuestion"
+  ).classList.toggle(
+    "hidden",
+    special
+  );
+
+
+  /*
+    平和ツモと副露平和形ロンでは
+    ロン・ツモも自動確定
+  */
+
+  const fixedWinType =
+    shape === "pinfuTsumo" ||
+    shape === "openPinfuRon";
+
+
+  document.getElementById(
+    "winTypeQuestion"
+  ).classList.toggle(
+    "hidden",
+    fixedWinType
+  );
+
+
+  if (shape === "pinfuTsumo") {
+
+    document.getElementById(
+      "tsumo"
+    ).checked = true;
+
+  }
+
+
+  if (shape === "openPinfuRon") {
+
+    document.getElementById(
+      "ron"
+    ).checked = true;
+
+  }
+
+}
+
+
+/* 形が変更されたら質問を更新 */
+
+document.querySelectorAll(
+  'input[name="shape"]'
+).forEach(function(input) {
+
+  input.addEventListener(
+    "change",
+    updateQuestions
+  );
+
+});
+
+
+/* 初期状態 */
+
+updateQuestions();
+
 </script>
-</body></html>
+
+</body>
+</html>
