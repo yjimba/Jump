@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>麻雀 点数計算</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f6f8;color:#17202a;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif}
+.wrap{max-width:560px;margin:auto;padding:16px 14px 40px}h1{font-size:24px;margin:6px 0 16px}.card{background:#fff;border-radius:18px;padding:18px;margin:12px 0;box-shadow:0 3px 14px #0001}.q{font-weight:750;font-size:17px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.btn{border:1px solid #ccd3da;background:#fff;border-radius:12px;padding:13px 8px;font-size:16px;font-weight:650}.btn.sel{background:#17202a;color:#fff;border-color:#17202a}
+label{font-size:14px;font-weight:700;display:block;margin:12px 0 6px}select{width:100%;padding:12px;border:1px solid #ccd3da;border-radius:10px;background:#fff;font-size:16px}
+.row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}.muted{font-size:13px;color:#68737e}.primary,.secondary{width:100%;border-radius:13px;padding:15px;font-size:17px;font-weight:750}.primary{background:#17202a;color:#fff;border:0}.secondary{background:#fff;border:1px solid #ccd3da;margin-top:9px}
+.hidden{display:none}.big{font-size:32px;font-weight:850;margin:5px 0}.result{font-weight:750;font-size:19px}table{width:100%;border-collapse:collapse}td{padding:8px 2px;border-bottom:1px solid #edf0f2}td:last-child{text-align:right;font-weight:750}
+.countgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.count{display:flex;flex-direction:column;gap:4px}.count span{text-align:center;font-size:13px;font-weight:650}.count select{padding:9px 3px}
+.note{background:#f1f3f5;padding:10px;border-radius:11px;font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>🀄 麻雀 点数計算</h1>
+<div id="app"></div>
+</div>
+<script>
+const S={special:null,under4:null,method:null,closed:null,wait:null,head:null};
+const app=document.getElementById("app");
+function buttons(title,key,items){
+ return `<div class="card"><div class="q">${title}</div><div class="grid">${items.map(([v,t])=>`<button class="btn ${S[key]===v?'sel':''}" onclick="setv('${key}','${v}')">${t}</button>`).join("")}</div></div>`;
+}
+function setv(k,v){S[k]=v;render()}
+function render(){
+ let h="";
+ if(S.special===null){
+  h=buttons("1. どの形ですか？","special",[["chiitoi","七対子"],["pinfu_tsumo","ピンフツモ"],["pinfu_ron","ピンフロン"],["normal","それ以外"]]);
+ } else {
+  h+=buttons("1. どの形ですか？","special",[["chiitoi","七対子"],["pinfu_tsumo","ピンフツモ"],["pinfu_ron","ピンフロン"],["normal","それ以外"]]);
+  h+=buttons("2. 4翻以下？","under4",[["yes","はい"],["no","いいえ"]]);
+  h+=buttons("3. あがり方","method",[["ron","ロン"],["tsumo","ツモ"]]);
+  h+=buttons("4. 面前・副露","closed",[["closed","面前"],["open","副露あり"]]);
+
+  if(S.special!=="chiitoi" && S.special!=="pinfu_tsumo" && S.special!=="pinfu_ron" && S.under4==="yes"){
+   h+=buttons("5. 待ち","wait",[["ryanmen_shabo","両面＆シャボ"],["kanchan_penchan_tanki","嵌張＆辺張＆単騎"]]);
+   h+=buttons("6. 雀頭","head",[["normal","普通"],["yakuhai","役牌"]]);
+   h+=mentsuCard();
+  }
+  h+=`<div class="card"><div class="q">7. 翻数</div>
+  <select id="han">
+   ${[1,2,3,4].map(x=>`<option value="${x}">${x}翻</option>`).join("")}
+   <option value="5">5翻（満貫）</option><option value="6">6翻（跳満）</option><option value="7">7翻（跳満）</option>
+   <option value="8">8翻（倍満）</option><option value="9">9翻（倍満）</option><option value="10">10翻（倍満）</option>
+   <option value="11">11翻（三倍満）</option><option value="12">12翻（三倍満）</option><option value="13">13翻以上（役満）</option>
+  </select>
+  <button class="primary" onclick="calc()">点数を計算</button></div>`;
+ }
+ app.innerHTML=h;
+}
+function mentsuCard(){
+ const types=["暗刻","明刻","暗槓","明槓"];
+ function sel(id){return `<select id="${id}">${[0,1,2,3,4].map(n=>`<option>${n}</option>`).join("")}</select>`}
+ return `<div class="card"><div class="q">7. 面子の数</div>
+ <div class="note">順子は0符なので入力不要です。各種類の個数だけ入力してください。</div>
+ <label>中張牌</label><div class="countgrid">
+ <div class="count"><span>${types[0]}</span>${sel("c_an_ko")}</div><div class="count"><span>${types[1]}</span>${sel("c_mei_ko")}</div>
+ <div class="count"><span>${types[2]}</span>${sel("c_an_kan")}</div><div class="count"><span>${types[3]}</span>${sel("c_mei_kan")}</div></div>
+ <label>么九牌</label><div class="countgrid">
+ <div class="count"><span>${types[0]}</span>${sel("t_an_ko")}</div><div class="count"><span>${types[1]}</span>${sel("t_mei_ko")}</div>
+ <div class="count"><span>${types[2]}</span>${sel("t_an_kan")}</div><div class="count"><span>${types[3]}</span>${sel("t_mei_kan")}</div></div>
+ </div>`;
+}
+function n(id){return +(document.getElementById(id)?.value||0)}
+function calc(){
+ const dealer=window.confirm("親ですか？\\n「OK」= 親、「キャンセル」= 子");
+ const han=+document.getElementById("han").value;
+ let fu=null,lines=[];
+ if(S.special==="chiitoi"){fu=25;lines=[["七対子",25]]}
+ else if(S.special==="pinfu_tsumo"){fu=20;lines=[["平和ツモ",20]]}
+ else if(S.special==="pinfu_ron"){fu=30;lines=[["平和ロン（門前ロン込み）",30]]}
+ else if(S.under4==="yes"){
+  fu=20;lines=[["副底",20]];
+  if(S.method==="ron"&&S.closed==="closed"){fu+=10;lines.push(["門前ロン",10])}
+  if(S.wait==="kanchan_penchan_tanki"){fu+=2;lines.push(["嵌張・辺張・単騎",2])}
+  if(S.head==="yakuhai"){fu+=2;lines.push(["役牌雀頭",2])}
+  const items=[
+   ["c_an_ko","中張牌暗刻",4],["c_mei_ko","中張牌明刻",2],["c_an_kan","中張牌暗槓",16],["c_mei_kan","中張牌明槓",8],
+   ["t_an_ko","么九牌暗刻",8],["t_mei_ko","么九牌明刻",4],["t_an_kan","么九牌暗槓",32],["t_mei_kan","么九牌明槓",16]
+  ];
+  items.forEach(([id,name,val])=>{let c=n(id);if(c){fu+=c*val;lines.push([name+` × ${c}`,c*val])}});
+  const raw=fu;fu=Math.ceil(fu/10)*10;
+  if(fu!==raw)lines.push(["10符単位に切り上げ",fu-raw]);
+ } else { fu=undefined; }
+
+ const payment=score(han,fu,dealer,S.method);
+ const title=payment.limit;
+ let detail="";
+ if(payment.kind==="ron") detail=`${payment.points.toLocaleString()}点`;
+ else if(payment.kind==="tsumoDealer") detail=`${payment.points.toLocaleString()}点オール`;
+ else detail=`${payment.child.toLocaleString()} / ${payment.dealer.toLocaleString()}点`;
+
+ let breakdown=fu?`<div class="card"><div class="q">符の内訳</div><table>${lines.map(x=>`<tr><td>${x[0]}</td><td>${x[1]>=0?"+":""}${x[1]}符</td></tr>`).join("")}</table><p class="muted">合計 ${fu}符</p></div>`:"";
+ app.innerHTML=`<div class="card result"><div class="muted">${dealer?"親":"子"}・${S.method==="ron"?"ロン":"ツモ"}</div><div class="big">${title}</div><div>${detail}</div></div>
+ ${breakdown}<div class="card"><div class="q">入力内容</div><p>${S.special==="normal"?"通常形":S.special==="chiitoi"?"七対子":S.special==="pinfu_tsumo"?"ピンフツモ":"ピンフロン"}・${han}翻・${S.closed==="closed"?"面前":"副露あり"}</p>
+ <button class="secondary" onclick="render()">最初からやり直す</button></div>`;
+}
+function score(han,fu,dealer,method){
+ if(han>=13)return {limit:"役満",kind:method==="ron"?"ron":"tsumoDealer",points:dealer?48000:32000};
+ if(han>=11)return {limit:"三倍満",kind:method==="ron"?"ron":"tsumoDealer",points:dealer?36000:24000};
+ if(han>=8)return {limit:"倍満",kind:method==="ron"?"ron":"tsumoDealer",points:dealer?24000:16000};
+ if(han>=6)return {limit:"跳満",kind:method==="ron"?"ron":"tsumoDealer",points:dealer?18000:12000};
+ if(han>=5 || (han===4&&fu>=40) || (han===3&&fu>=70))return {limit:"満貫",kind:method==="ron"?"ron":"tsumoDealer",points:dealer?12000:8000};
+ const base=fu*Math.pow(2,han+2);
+ if(method==="ron")return {limit:`${han}翻 ${fu}符`,kind:"ron",points:Math.ceil((base*(dealer?6:4))/100)*100};
+ if(dealer)return {limit:`${han}翻 ${fu}符`,kind:"tsumoDealer",points:Math.ceil(base*2/100)*100};
+ return {limit:`${han}翻 ${fu}符`,kind:"tsumoChild",child:Math.ceil(base/100)*100,dealer:Math.ceil(base*2/100)*100};
+}
+render();
+</script>
+</body></html>
