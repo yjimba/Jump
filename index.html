@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="ja">
+
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -7,6 +8,7 @@
 <title>雀符（Jump）｜麻雀符計算</title>
 
 <style>
+
 * {
   box-sizing: border-box;
 }
@@ -58,10 +60,6 @@ header {
   margin-bottom: 22px;
 }
 
-.question:last-child {
-  margin-bottom: 0;
-}
-
 .question-title {
   font-weight: 700;
   margin-bottom: 10px;
@@ -108,10 +106,6 @@ header {
   margin-bottom: 10px;
 }
 
-.number-row:last-child {
-  margin-bottom: 0;
-}
-
 .number-row span {
   font-size: 14px;
 }
@@ -125,24 +119,12 @@ header {
   font-size: 16px;
 }
 
-button {
-  width: 100%;
-  border: none;
-  border-radius: 12px;
-  padding: 15px;
-  font-size: 17px;
-  font-weight: 700;
-  cursor: pointer;
-  background: #222;
-  color: white;
-}
-
-button:hover {
-  opacity: 0.9;
+.hidden {
+  display: none;
 }
 
 #result {
-  display: none;
+  display: block;
 }
 
 .result-main {
@@ -157,21 +139,20 @@ button:hover {
 }
 
 .fu {
-  font-size: 38px;
+  font-size: 40px;
   font-weight: 800;
 }
 
 .points {
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 800;
-  margin-top: 4px;
+  margin-top: 8px;
 }
 
 .detail {
   background: #f7f7f7;
   border-radius: 12px;
   padding: 14px;
-  margin-top: 14px;
   line-height: 1.8;
   font-size: 14px;
 }
@@ -199,6 +180,13 @@ button:hover {
   font-size: 18px;
 }
 
+.limit {
+  font-size: 22px;
+  font-weight: 800;
+  text-align: center;
+  margin: 10px 0;
+}
+
 .note {
   color: #777;
   font-size: 12px;
@@ -206,18 +194,8 @@ button:hover {
   line-height: 1.6;
 }
 
-.reset {
-  margin-top: 12px;
-  background: white;
-  color: #222;
-  border: 1px solid #ccc;
-}
-
-.hidden {
-  display: none;
-}
-
 @media (max-width: 480px) {
+
   .container {
     padding: 18px 12px 40px;
   }
@@ -233,421 +211,514 @@ button:hover {
   .options {
     grid-template-columns: 1fr;
   }
+
 }
+
 </style>
 </head>
+
 
 <body>
 
 <div class="container">
 
 <header>
-  <div class="logo">雀符（Jump）</div>
-  <div class="subtitle">麻雀の符計算・点数計算</div>
+
+  <div class="logo">
+    雀符（Jump）
+  </div>
+
+  <div class="subtitle">
+    麻雀の符計算・点数計算
+  </div>
+
 </header>
 
 
-<!-- =========================
-     質問
-========================= -->
-
 <div class="card">
 
-  <!-- 1. 形 -->
-  <div class="question">
 
-    <div class="question-title">
-      1. 形について
+<!-- 1. 形 -->
+
+<div class="question">
+
+  <div class="question-title">
+    1. 形について
+  </div>
+
+  <div class="options">
+
+    <div class="option">
+      <input type="radio"
+             name="shape"
+             id="shapeChiitoi"
+             value="chiitoi">
+
+      <label for="shapeChiitoi">
+        七対子
+      </label>
     </div>
 
-    <div class="options">
 
-      <div class="option">
-        <input type="radio"
-               name="shape"
-               id="shape1"
-               value="chiitoi">
-        <label for="shape1">七対子</label>
-      </div>
+    <div class="option">
+      <input type="radio"
+             name="shape"
+             id="shapeOpenPinfu"
+             value="openPinfuRon">
 
-      <div class="option">
-        <input type="radio"
-               name="shape"
-               id="shape2"
-               value="pinfuTsumo">
-        <label for="shape2">平和ツモ</label>
-      </div>
+      <label for="shapeOpenPinfu">
+        副露平和形ロン
+      </label>
+    </div>
 
-      <div class="option">
-        <input type="radio"
-               name="shape"
-               id="shape3"
-               value="openPinfuRon">
-        <label for="shape3">副露平和形ロン</label>
-      </div>
 
-      <div class="option">
-        <input type="radio"
-               name="shape"
-               id="shape4"
-               value="other"
-               checked>
-        <label for="shape4">それ以外</label>
-      </div>
+    <div class="option">
+      <input type="radio"
+             name="shape"
+             id="shapeOther"
+             value="other"
+             checked>
 
+      <label for="shapeOther">
+        それ以外
+      </label>
     </div>
 
   </div>
-
-
-  <!-- 2. 翻数 -->
-  <div class="question">
-
-    <div class="question-title">
-      2. 何翻ですか？
-    </div>
-
-    <div class="options">
-
-      <div class="option">
-        <input type="radio"
-               name="han"
-               id="han1"
-               value="1">
-        <label for="han1">1翻</label>
-      </div>
-
-      <div class="option">
-        <input type="radio"
-               name="han"
-               id="han2"
-               value="2">
-        <label for="han2">2翻</label>
-      </div>
-
-      <div class="option">
-        <input type="radio"
-               name="han"
-               id="han3"
-               value="3">
-        <label for="han3">3翻</label>
-      </div>
-
-      <div class="option">
-        <input type="radio"
-               name="han"
-               id="han4"
-               value="4">
-        <label for="han4">4翻</label>
-      </div>
-
-      <div class="option">
-        <input type="radio"
-               name="han"
-               id="han5"
-               value="5plus">
-        <label for="han5">5翻以上</label>
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- 3. ロン・ツモ -->
-  <div class="question"
-       id="winTypeQuestion">
-
-    <div class="question-title">
-      3. ロン・ツモ
-    </div>
-
-    <div class="options">
-
-      <div class="option">
-        <input type="radio"
-               name="winType"
-               id="ron"
-               value="ron"
-               checked>
-        <label for="ron">ロン</label>
-      </div>
-
-      <div class="option">
-        <input type="radio"
-               name="winType"
-               id="tsumo"
-               value="tsumo">
-        <label for="tsumo">ツモ</label>
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- 4. 面前・副露 -->
-  <div class="question"
-       id="openQuestion">
-
-    <div class="question-title">
-      4. 面前・副露あり
-    </div>
-
-    <div class="options">
-
-      <div class="option">
-        <input type="radio"
-               name="open"
-               id="closed"
-               value="closed"
-               checked>
-        <label for="closed">面前</label>
-      </div>
-
-      <div class="option">
-        <input type="radio"
-               name="open"
-               id="open"
-               value="open">
-        <label for="open">副露あり</label>
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- 5. 待ち -->
-  <div class="question"
-       id="waitQuestion">
-
-    <div class="question-title">
-      5. 待ち
-    </div>
-
-    <div class="options">
-
-      <div class="option">
-        <input type="radio"
-               name="wait"
-               id="wait1"
-               value="ryanmenShabo"
-               checked>
-        <label for="wait1">両面・シャボ</label>
-      </div>
-
-      <div class="option">
-        <input type="radio"
-               name="wait"
-               id="wait2"
-               value="kanchanPenchanTanki">
-        <label for="wait2">嵌張・辺張・単騎</label>
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- 6. 雀頭 -->
-  <div class="question"
-       id="headQuestion">
-
-    <div class="question-title">
-      6. 雀頭
-    </div>
-
-    <div class="options">
-
-      <div class="option">
-        <input type="radio"
-               name="head"
-               id="headYakuhai"
-               value="yakuhai"
-               checked>
-        <label for="headYakuhai">役牌</label>
-      </div>
-
-      <div class="option">
-        <input type="radio"
-               name="head"
-               id="headNormal"
-               value="normal">
-        <label for="headNormal">普通</label>
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- 7. 中張牌 -->
-  <div class="question"
-       id="middleQuestion">
-
-    <div class="question-title">
-      7. 中張牌の面子
-    </div>
-
-    <div class="number-row">
-      <span>暗刻の数</span>
-
-      <select id="middleAnko">
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-      </select>
-    </div>
-
-    <div class="number-row">
-      <span>明刻の数</span>
-
-      <select id="middleMinko">
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-      </select>
-    </div>
-
-    <div class="number-row">
-      <span>暗槓の数</span>
-
-      <select id="middleAnkan">
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-      </select>
-    </div>
-
-    <div class="number-row">
-      <span>明槓の数</span>
-
-      <select id="middleMinkan">
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-      </select>
-    </div>
-
-  </div>
-
-
-  <!-- 8. 么九牌 -->
-  <div class="question"
-       id="terminalQuestion">
-
-    <div class="question-title">
-      8. 么九牌の面子
-    </div>
-
-    <div class="number-row">
-      <span>暗刻の数</span>
-
-      <select id="terminalAnko">
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-      </select>
-    </div>
-
-    <div class="number-row">
-      <span>明刻の数</span>
-
-      <select id="terminalMinko">
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-      </select>
-    </div>
-
-    <div class="number-row">
-      <span>暗槓の数</span>
-
-      <select id="terminalAnkan">
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-      </select>
-    </div>
-
-    <div class="number-row">
-      <span>明槓の数</span>
-
-      <select id="terminalMinkan">
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-      </select>
-    </div>
-
-  </div>
-
-
-  <button onclick="calculate()">
-    符と点数を計算
-  </button>
 
 </div>
+
+
+
+<!-- 2. 翻数 -->
+
+<div class="question">
+
+  <div class="question-title">
+    2. 何翻ですか？
+  </div>
+
+  <div class="options">
+
+    <div class="option">
+      <input type="radio"
+             name="han"
+             id="han1"
+             value="1"
+             checked>
+
+      <label for="han1">
+        1翻
+      </label>
+    </div>
+
+
+    <div class="option">
+      <input type="radio"
+             name="han"
+             id="han2"
+             value="2">
+
+      <label for="han2">
+        2翻
+      </label>
+    </div>
+
+
+    <div class="option">
+      <input type="radio"
+             name="han"
+             id="han3"
+             value="3">
+
+      <label for="han3">
+        3翻
+      </label>
+    </div>
+
+
+    <div class="option">
+      <input type="radio"
+             name="han"
+             id="han4"
+             value="4">
+
+      <label for="han4">
+        4翻
+      </label>
+    </div>
+
+
+    <div class="option">
+      <input type="radio"
+             name="han"
+             id="han5plus"
+             value="5plus">
+
+      <label for="han5plus">
+        5翻以上
+      </label>
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- 3. ロン・ツモ -->
+
+<div class="question" id="winTypeQuestion">
+
+  <div class="question-title">
+    3. ロン・ツモ
+  </div>
+
+  <div class="options">
+
+    <div class="option">
+      <input type="radio"
+             name="winType"
+             id="ron"
+             value="ron"
+             checked>
+
+      <label for="ron">
+        ロン
+      </label>
+    </div>
+
+
+    <div class="option">
+      <input type="radio"
+             name="winType"
+             id="tsumo"
+             value="tsumo">
+
+      <label for="tsumo">
+        ツモ
+      </label>
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- 4. 面前・副露 -->
+
+<div class="question" id="openQuestion">
+
+  <div class="question-title">
+    4. 面前・副露あり
+  </div>
+
+  <div class="options">
+
+    <div class="option">
+      <input type="radio"
+             name="open"
+             id="closed"
+             value="closed"
+             checked>
+
+      <label for="closed">
+        面前
+      </label>
+    </div>
+
+
+    <div class="option">
+      <input type="radio"
+             name="open"
+             id="open"
+             value="open">
+
+      <label for="open">
+        副露あり
+      </label>
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- 5. 待ち -->
+
+<div class="question" id="waitQuestion">
+
+  <div class="question-title">
+    5. 待ち
+  </div>
+
+  <div class="options">
+
+    <div class="option">
+      <input type="radio"
+             name="wait"
+             id="waitRyanmen"
+             value="ryanmen"
+             checked>
+
+      <label for="waitRyanmen">
+        両面
+      </label>
+    </div>
+
+
+    <div class="option">
+      <input type="radio"
+             name="wait"
+             id="waitShabo"
+             value="shabo">
+
+      <label for="waitShabo">
+        シャボ
+      </label>
+    </div>
+
+
+    <div class="option">
+      <input type="radio"
+             name="wait"
+             id="waitOther"
+             value="other">
+
+      <label for="waitOther">
+        嵌張・辺張・単騎
+      </label>
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- 6. 雀頭 -->
+
+<div class="question" id="headQuestion">
+
+  <div class="question-title">
+    6. 雀頭
+  </div>
+
+  <div class="options">
+
+    <div class="option">
+      <input type="radio"
+             name="head"
+             id="headYakuhai"
+             value="yakuhai">
+
+      <label for="headYakuhai">
+        役牌
+      </label>
+    </div>
+
+
+    <div class="option">
+      <input type="radio"
+             name="head"
+             id="headNormal"
+             value="normal"
+             checked>
+
+      <label for="headNormal">
+        普通
+      </label>
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- 7. 中張牌 -->
+
+<div class="question" id="middleQuestion">
+
+  <div class="question-title">
+    7. 中張牌の面子
+  </div>
+
+
+  <div class="number-row">
+
+    <span>暗刻の数</span>
+
+    <select id="middleAnko">
+      <option value="0">0</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+    </select>
+
+  </div>
+
+
+  <div class="number-row">
+
+    <span>明刻の数</span>
+
+    <select id="middleMinko">
+      <option value="0">0</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+    </select>
+
+  </div>
+
+
+  <div class="number-row">
+
+    <span>暗槓の数</span>
+
+    <select id="middleAnkan">
+      <option value="0">0</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+    </select>
+
+  </div>
+
+
+  <div class="number-row">
+
+    <span>明槓の数</span>
+
+    <select id="middleMinkan">
+      <option value="0">0</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+    </select>
+
+  </div>
+
+</div>
+
+
+
+<!-- 8. 么九牌 -->
+
+<div class="question" id="terminalQuestion">
+
+  <div class="question-title">
+    8. 么九牌の面子
+  </div>
+
+
+  <div class="number-row">
+
+    <span>暗刻の数</span>
+
+    <select id="terminalAnko">
+      <option value="0">0</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+    </select>
+
+  </div>
+
+
+  <div class="number-row">
+
+    <span>明刻の数</span>
+
+    <select id="terminalMinko">
+      <option value="0">0</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+    </select>
+
+  </div>
+
+
+  <div class="number-row">
+
+    <span>暗槓の数</span>
+
+    <select id="terminalAnkan">
+      <option value="0">0</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+    </select>
+
+  </div>
+
+
+  <div class="number-row">
+
+    <span>明槓の数</span>
+
+    <select id="terminalMinkan">
+      <option value="0">0</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+    </select>
+
+  </div>
+
+</div>
+
+</div>
+
 
 
 <!-- =========================
      結果
 ========================= -->
 
-<div class="card"
-     id="result">
+<div class="card" id="result">
 
   <div class="result-main">
 
-    <div class="result-title"
-         id="resultType">
+    <div class="result-title" id="resultType">
     </div>
 
-    <div class="fu"
-         id="fuResult">
+    <div class="fu" id="fuResult">
     </div>
 
-    <div class="points"
-         id="pointResult">
+    <div class="points" id="pointResult">
     </div>
 
   </div>
 
-  <div class="detail"
-       id="detailResult">
+
+  <div class="detail" id="detailResult">
   </div>
 
-  <button class="reset"
-          onclick="resetApp()">
-    もう一度計算する
-  </button>
+</div>
+
 
 </div>
 
-</div>
 
 
 <script>
 
+
 /* =====================================
-   共通関数
+   ラジオボタン取得
 ===================================== */
 
 function getRadio(name) {
@@ -657,15 +728,76 @@ function getRadio(name) {
       'input[name="' + name + '"]:checked'
     );
 
-  return checked ? checked.value : null;
+  return checked
+    ? checked.value
+    : null;
+
 }
 
+
+/* =====================================
+   数値取得
+===================================== */
 
 function num(id) {
 
   return Number(
     document.getElementById(id).value
   );
+
+}
+
+
+/* =====================================
+   数値をカンマ区切り
+===================================== */
+
+function yen(value) {
+
+  return value.toLocaleString();
+
+}
+
+
+/* =====================================
+   平和ツモ判定
+===================================== */
+
+function isPinfuTsumo() {
+
+  if (getRadio("shape") !== "other") {
+    return false;
+  }
+
+  if (getRadio("winType") !== "tsumo") {
+    return false;
+  }
+
+  if (getRadio("open") !== "closed") {
+    return false;
+  }
+
+  if (getRadio("wait") !== "ryanmen") {
+    return false;
+  }
+
+  if (getRadio("head") !== "normal") {
+    return false;
+  }
+
+
+  const allMeldsZero =
+    num("middleAnko") === 0 &&
+    num("middleMinko") === 0 &&
+    num("middleAnkan") === 0 &&
+    num("middleMinkan") === 0 &&
+    num("terminalAnko") === 0 &&
+    num("terminalMinko") === 0 &&
+    num("terminalAnkan") === 0 &&
+    num("terminalMinkan") === 0;
+
+
+  return allMeldsZero;
 
 }
 
@@ -697,20 +829,6 @@ function calculateFu() {
   }
 
 
-  /* 平和ツモ */
-
-  if (shape === "pinfuTsumo") {
-
-    return {
-      fu: 20,
-      details: [
-        "平和ツモ：20符固定"
-      ]
-    };
-
-  }
-
-
   /* 副露平和形ロン */
 
   if (shape === "openPinfuRon") {
@@ -725,7 +843,21 @@ function calculateFu() {
   }
 
 
-  /* 通常形 */
+  /* 平和ツモ */
+
+  if (isPinfuTsumo()) {
+
+    return {
+      fu: 20,
+      details: [
+        "平和ツモ：20符固定"
+      ]
+    };
+
+  }
+
+
+  /* 通常計算 */
 
   let fu = 20;
 
@@ -778,10 +910,7 @@ function calculateFu() {
 
   /* 待ち */
 
-  if (
-    wait ===
-    "kanchanPenchanTanki"
-  ) {
+  if (wait === "other") {
 
     fu += 2;
 
@@ -794,17 +923,10 @@ function calculateFu() {
 
   /* 中張牌 */
 
-  const middleAnko =
-    num("middleAnko");
-
-  const middleMinko =
-    num("middleMinko");
-
-  const middleAnkan =
-    num("middleAnkan");
-
-  const middleMinkan =
-    num("middleMinkan");
+  const middleAnko = num("middleAnko");
+  const middleMinko = num("middleMinko");
+  const middleAnkan = num("middleAnkan");
+  const middleMinkan = num("middleMinkan");
 
 
   fu += middleAnko * 4;
@@ -823,6 +945,7 @@ function calculateFu() {
 
   }
 
+
   if (middleMinko > 0) {
 
     details.push(
@@ -833,6 +956,7 @@ function calculateFu() {
 
   }
 
+
   if (middleAnkan > 0) {
 
     details.push(
@@ -842,6 +966,7 @@ function calculateFu() {
     );
 
   }
+
 
   if (middleMinkan > 0) {
 
@@ -856,17 +981,10 @@ function calculateFu() {
 
   /* 么九牌 */
 
-  const terminalAnko =
-    num("terminalAnko");
-
-  const terminalMinko =
-    num("terminalMinko");
-
-  const terminalAnkan =
-    num("terminalAnkan");
-
-  const terminalMinkan =
-    num("terminalMinkan");
+  const terminalAnko = num("terminalAnko");
+  const terminalMinko = num("terminalMinko");
+  const terminalAnkan = num("terminalAnkan");
+  const terminalMinkan = num("terminalMinkan");
 
 
   fu += terminalAnko * 8;
@@ -885,6 +1003,7 @@ function calculateFu() {
 
   }
 
+
   if (terminalMinko > 0) {
 
     details.push(
@@ -895,6 +1014,7 @@ function calculateFu() {
 
   }
 
+
   if (terminalAnkan > 0) {
 
     details.push(
@@ -904,6 +1024,7 @@ function calculateFu() {
     );
 
   }
+
 
   if (terminalMinkan > 0) {
 
@@ -918,8 +1039,7 @@ function calculateFu() {
 
   /* 10符単位に切り上げ */
 
-  fu =
-    Math.ceil(fu / 10) * 10;
+  fu = Math.ceil(fu / 10) * 10;
 
 
   details.push(
@@ -939,26 +1059,13 @@ function calculateFu() {
    点数計算
 ===================================== */
 
-function calculatePoints(
-  fu,
-  han,
-  winType
-) {
-
-  /*
-    基本点
-    fu × 2^(han+2)
-  */
+function calculatePoints(fu, han) {
 
   const base =
     fu * Math.pow(2, han + 2);
 
 
-  /*
-    満貫判定
-
-    基本点2000以上なら満貫
-  */
+  /* 満貫 */
 
   if (base >= 2000) {
 
@@ -966,28 +1073,31 @@ function calculatePoints(
       limit: "満貫",
       dealerRon: 12000,
       childRon: 8000,
-      dealerTsumo: "4000オール",
-      childTsumo: "2000 / 4000"
+      dealerTsumo: 4000,
+      childTsumoKo: 2000,
+      childTsumoOya: 4000
     };
 
   }
 
 
-  /* ロン */
+  /* 子ロン */
 
   const childRon =
     Math.ceil(
-      base * 4 / 100
+      (base * 4) / 100
     ) * 100;
 
+
+  /* 親ロン */
 
   const dealerRon =
     Math.ceil(
-      base * 6 / 100
+      (base * 6) / 100
     ) * 100;
 
 
-  /* ツモ */
+  /* 子ツモ：子の支払い */
 
   const childTsumoKo =
     Math.ceil(
@@ -995,15 +1105,19 @@ function calculatePoints(
     ) * 100;
 
 
+  /* 子ツモ：親の支払い */
+
   const childTsumoOya =
     Math.ceil(
-      base * 2 / 100
+      (base * 2) / 100
     ) * 100;
 
 
+  /* 親ツモ */
+
   const dealerTsumo =
     Math.ceil(
-      base * 2 / 100
+      (base * 2) / 100
     ) * 100;
 
 
@@ -1011,19 +1125,15 @@ function calculatePoints(
 
     limit: null,
 
-    dealerRon:
-      dealerRon,
+    dealerRon: dealerRon,
 
-    childRon:
-      childRon,
+    childRon: childRon,
 
-    dealerTsumo:
-      dealerTsumo,
+    dealerTsumo: dealerTsumo,
 
-    childTsumo:
-      childTsumoKo +
-      " / " +
-      childTsumoOya
+    childTsumoKo: childTsumoKo,
+
+    childTsumoOya: childTsumoOya
 
   };
 
@@ -1031,7 +1141,7 @@ function calculatePoints(
 
 
 /* =====================================
-   満貫以上の点数表
+   満貫以上の表
 ===================================== */
 
 function makeLimitTable() {
@@ -1041,6 +1151,7 @@ function makeLimitTable() {
     <div class="highlight">
       満貫以上の点数表
     </div>
+
 
     <table class="score-table">
 
@@ -1056,6 +1167,7 @@ function makeLimitTable() {
 
       </thead>
 
+
       <tbody>
 
         <tr>
@@ -1066,6 +1178,7 @@ function makeLimitTable() {
           <td>2,000 / 4,000</td>
         </tr>
 
+
         <tr>
           <td>6〜7翻<br>跳満</td>
           <td>18,000</td>
@@ -1073,6 +1186,7 @@ function makeLimitTable() {
           <td>6,000オール</td>
           <td>3,000 / 6,000</td>
         </tr>
+
 
         <tr>
           <td>8〜10翻<br>倍満</td>
@@ -1082,6 +1196,7 @@ function makeLimitTable() {
           <td>4,000 / 8,000</td>
         </tr>
 
+
         <tr>
           <td>11〜12翻<br>三倍満</td>
           <td>36,000</td>
@@ -1089,6 +1204,7 @@ function makeLimitTable() {
           <td>12,000オール</td>
           <td>6,000 / 12,000</td>
         </tr>
+
 
         <tr>
           <td>13翻以上<br>役満</td>
@@ -1102,6 +1218,7 @@ function makeLimitTable() {
 
     </table>
 
+
     <div class="note">
       5翻＝満貫、6〜7翻＝跳満、8〜10翻＝倍満、
       11〜12翻＝三倍満、13翻以上＝役満。
@@ -1113,30 +1230,17 @@ function makeLimitTable() {
 
 
 /* =====================================
-   メイン処理
+   メイン計算
 ===================================== */
 
 function calculate() {
 
-  const result =
-    document.getElementById("result");
-
-  const shape =
-    getRadio("shape");
-
-  const han =
-    getRadio("han");
-
-  const winType =
-    getRadio("winType");
+  const shape = getRadio("shape");
+  const han = getRadio("han");
+  const winType = getRadio("winType");
 
 
-  result.style.display = "block";
-
-
-  /* ---------------------------------
-     5翻以上
-  --------------------------------- */
+  /* 5翻以上 */
 
   if (han === "5plus") {
 
@@ -1164,19 +1268,12 @@ function calculate() {
       makeLimitTable();
 
 
-    result.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-
     return;
 
   }
 
 
-  /* ---------------------------------
-     1〜4翻
-  --------------------------------- */
+  /* 1〜4翻 */
 
   const hanNumber =
     Number(han);
@@ -1193,21 +1290,22 @@ function calculate() {
   const points =
     calculatePoints(
       fu,
-      hanNumber,
-      winType
+      hanNumber
     );
 
 
-  /* 結果タイトル */
+  /* タイトル */
 
   document.getElementById(
     "resultType"
   ).textContent =
     hanNumber +
     "翻・" +
-    (winType === "ron"
-      ? "ロン"
-      : "ツモ");
+    (
+      winType === "ron"
+        ? "ロン"
+        : "ツモ"
+    );
 
 
   /* 符 */
@@ -1218,9 +1316,7 @@ function calculate() {
     fu + "符";
 
 
-  /* ---------------------------------
-     点数表示
-  --------------------------------- */
+  /* 点数 */
 
   let pointText = "";
 
@@ -1229,17 +1325,20 @@ function calculate() {
 
     pointText =
       "親 " +
-      points.dealerRon.toLocaleString() +
+      yen(points.dealerRon) +
       " / 子 " +
-      points.childRon.toLocaleString();
+      yen(points.childRon);
+
 
   } else {
 
     pointText =
       "親 " +
-      points.dealerTsumo.toLocaleString() +
+      yen(points.dealerTsumo) +
       "オール / 子 " +
-      points.childTsumo;
+      yen(points.childTsumoKo) +
+      "・" +
+      yen(points.childTsumoOya);
 
   }
 
@@ -1250,14 +1349,9 @@ function calculate() {
     pointText;
 
 
-  /* ---------------------------------
-     詳細
-  --------------------------------- */
+  /* 詳細 */
 
-  let detailHTML = "";
-
-
-  detailHTML +=
+  let detailHTML =
     "<strong>符の内訳</strong><br>";
 
 
@@ -1265,14 +1359,22 @@ function calculate() {
     fuData.details.join("<br>");
 
 
-  /* 満貫になった場合 */
+  if (isPinfuTsumo()) {
+
+    detailHTML +=
+      "<br><br>" +
+      "<strong>平和ツモとして自動判定</strong>";
+
+  }
+
 
   if (points.limit) {
 
     detailHTML +=
-      "<br><br><strong>" +
+      "<br><br>" +
+      "<div class='limit'>" +
       points.limit +
-      "</strong>";
+      "</div>";
 
   }
 
@@ -1282,88 +1384,11 @@ function calculate() {
   ).innerHTML =
     detailHTML;
 
-
-  result.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-  });
-
 }
 
 
 /* =====================================
-   リセット
-===================================== */
-
-function resetApp() {
-
-  document.querySelectorAll(
-    'input[type="radio"]'
-  ).forEach(function(input) {
-
-    input.checked = false;
-
-  });
-
-
-  document.getElementById(
-    "shape4"
-  ).checked = true;
-
-
-  document.getElementById(
-    "han1"
-  ).checked = true;
-
-
-  document.getElementById(
-    "ron"
-  ).checked = true;
-
-
-  document.getElementById(
-    "closed"
-  ).checked = true;
-
-
-  document.getElementById(
-    "wait1"
-  ).checked = true;
-
-
-  document.getElementById(
-    "headNormal"
-  ).checked = true;
-
-
-  document.querySelectorAll(
-    "select"
-  ).forEach(function(select) {
-
-    select.value = "0";
-
-  });
-
-
-  document.getElementById(
-    "result"
-  ).style.display =
-    "none";
-
-
-  updateQuestions();
-
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-
-}
-
-
-/* =====================================
-   質問項目の自動調整
+   形による質問項目の切り替え
 ===================================== */
 
 function updateQuestions() {
@@ -1372,14 +1397,8 @@ function updateQuestions() {
     getRadio("shape");
 
 
-  /*
-    特殊形では通常の符計算を
-    行わない
-  */
-
   const special =
     shape === "chiitoi" ||
-    shape === "pinfuTsumo" ||
     shape === "openPinfuRon";
 
 
@@ -1423,13 +1442,9 @@ function updateQuestions() {
   );
 
 
-  /*
-    平和ツモと副露平和形ロンでは
-    ロン・ツモも自動確定
-  */
+  /* 副露平和形ロン */
 
   const fixedWinType =
-    shape === "pinfuTsumo" ||
     shape === "openPinfuRon";
 
 
@@ -1441,15 +1456,6 @@ function updateQuestions() {
   );
 
 
-  if (shape === "pinfuTsumo") {
-
-    document.getElementById(
-      "tsumo"
-    ).checked = true;
-
-  }
-
-
   if (shape === "openPinfuRon") {
 
     document.getElementById(
@@ -1458,28 +1464,40 @@ function updateQuestions() {
 
   }
 
+
+  calculate();
+
 }
 
 
-/* 形が変更されたら質問を更新 */
+/* =====================================
+   入力変更時に自動計算
+===================================== */
 
 document.querySelectorAll(
-  'input[name="shape"]'
-).forEach(function(input) {
+  'input[type="radio"], select'
+).forEach(function(element) {
 
-  input.addEventListener(
+  element.addEventListener(
     "change",
-    updateQuestions
+    function() {
+
+      updateQuestions();
+
+    }
   );
 
 });
 
 
-/* 初期状態 */
+/* =====================================
+   初期表示
+===================================== */
 
 updateQuestions();
 
 </script>
 
 </body>
+
 </html>
